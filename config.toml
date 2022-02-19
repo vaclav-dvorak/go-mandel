@@ -1,0 +1,16 @@
+[mandel]
+palette = "Hippi"
+width = 1024
+height = 768
+step = 6000
+radius = 0.125689
+iteration = 800
+workers = 8
+
+  [mandel.real]
+  from = -2.05
+  to = 1
+
+  [mandel.imag]
+  from = -1.1
+  to = 1.1
