@@ -1,9 +1,7 @@
 [mandel]
-palette = "Hippi"
+palette = "SummerBeach"
 width = 1024
 height = 768
-step = 6000
-radius = 0.125689
 iteration = 800
 workers = 8
 

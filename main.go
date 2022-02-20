@@ -22,10 +22,8 @@ type config struct {
 	Real       map[string]float64 `koanf:"real"`
 	Imag       map[string]float64 `koanf:"imag"`
 	Palette    string             `koanf:"palette"`
-	Radius     float64            `koanf:"radius"`
 	Width      int                `koanf:"width"`
 	Height     int                `koanf:"height"`
-	Step       int                `koanf:"step"`
 	Iterations int                `koanf:"iteration"`
 	Workers    int                `koanf:"workers"`
 }
@@ -85,8 +83,6 @@ func main() {
 	if _, ok := palette.ColorPalettes[conf.Palette]; !ok {
 		log.Fatalf("pallet %s not found", conf.Palette)
 	}
-	pal := palette.ColorPalettes[conf.Palette]
-	log.Printf("%v\n", pal)
 	steps = getSteps()
 	pixelgl.Run(run)
 }
@@ -124,12 +120,8 @@ func workersInit(pixs chan<- pix) {
 						rx := realw*float64(x)/float64(conf.Width) + conf.Real["from"]
 						ry := imagw*float64(y)/float64(conf.Height) + conf.Imag["from"]
 						ch, i := mandelbrotIteraction(rx, ry)
-						if ch > 4 {
-							pixs <- pix{x: x, y: y, c: hslToRGB(float64(i)/100*ch, 1, 0.5)}
-						} else {
-							pixs <- pix{x: x, y: y, c: color.RGBA{R: 0, G: 0, B: 0, A: 255}}
-						}
-
+						// pixs <- pix{x: x, y: y, c: calcColor(float64(conf.Iterations-i) + math.Log(ch))}
+						pixs <- pix{x: x, y: y, c: calcColor(float64(i) - math.Log(ch))}
 					}
 				}
 			}
@@ -155,11 +147,11 @@ func mandelbrotIteraction(a, b float64) (float64, int) {
 		if xx+yy > 4 {
 			return xx + yy, i
 		}
-		// xn+1 = x^2 - y^2 + a
+
 		x = xx - yy + a
-		// yn+1 = 2xy + b
 		y = 2*xy + b
 	}
 
-	return xx + yy, conf.Iterations
+	return (x*x + y*y) / 2, conf.Iterations
+	// return xx + yy, conf.Iterations
 }

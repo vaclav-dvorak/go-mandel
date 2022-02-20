@@ -1,41 +1,24 @@
 package main
 
-import "image/color"
+import (
+	"image/color"
+	"math"
 
-func hueToRGB(p, q, t float64) float64 {
-	if t < 0 {
-		t++
+	"github.com/vaclav-dvorak/go-mandelbrot/palette"
+)
+
+func calcColor(val float64) color.RGBA {
+	pal := palette.ColorPalettes[conf.Palette]
+	if val > float64(conf.Iterations) {
+		return pal[len(pal)-1]
 	}
-	if t > 1 {
-		t--
-	}
-	switch {
-	case t < 1.0/6.0:
-		return p + (q-p)*6*t
-	case t < 1.0/2.0:
-		return q
-	case t < 2.0/3.0:
-		return p + (q-p)*(2.0/3.0-t)*6
-	default:
-		return p
-	}
+	i, frac := math.Modf((float64(len(pal)-1) * val) / float64(conf.Iterations))
+	sr, sg, sb, sa := pal[int(i)].RGBA()
+	tr, tg, tb, _ := pal[int(i)+1].RGBA()
+	return color.RGBA{cosineInterpolation(float64(sr), float64(tr), frac), cosineInterpolation(float64(sg), float64(tg), frac), cosineInterpolation(float64(sb), float64(tb), frac), uint8(sa)}
 }
 
-func hslToRGB(h, s, l float64) color.RGBA {
-	var r, g, b float64
-	if s == 0 {
-		r, g, b = l, l, l
-	} else {
-		var q, p float64
-		if l < 0.5 {
-			q = l * (1 + s)
-		} else {
-			q = l + s - l*s
-		}
-		p = 2*l - q
-		r = hueToRGB(p, q, h+1.0/3.0)
-		g = hueToRGB(p, q, h)
-		b = hueToRGB(p, q, h-1.0/3.0)
-	}
-	return color.RGBA{R: uint8(r * 255), G: uint8(g * 255), B: uint8(b * 255), A: 255}
+func cosineInterpolation(c1, c2, mu float64) uint8 {
+	mu2 := (1 - math.Cos(mu*math.Pi)) / 2.0
+	return uint8(c1*(1-mu2) + c2*mu2)
 }
