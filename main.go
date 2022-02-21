@@ -44,7 +44,6 @@ var (
 )
 
 func run() {
-	img = image.NewRGBA(image.Rect(0, 0, conf.Width, conf.Height))
 	cfg := pixelgl.WindowConfig{
 		Title:       fmt.Sprintf("Mandelbrot set z^2+c @%s", version),
 		Bounds:      pixel.R(0, 0, float64(conf.Width), float64(conf.Height)),
@@ -57,9 +56,8 @@ func run() {
 		log.Fatalf("error creating window: %v", err)
 	}
 
-	drawBuffer := make(chan pix, (conf.Width/steps["x"])*(conf.Height/steps["y"]))
-	go drawThread(drawBuffer)
-	go workersInit(drawBuffer)
+	render()
+
 	for !win.Closed() {
 		if win.JustPressed(pixelgl.KeyEscape) || win.JustPressed(pixelgl.KeyQ) {
 			return
@@ -154,4 +152,11 @@ func mandelbrotIteraction(a, b float64) (float64, int) {
 
 	return (x*x + y*y) / 2, conf.Iterations
 	// return xx + yy, conf.Iterations
+}
+
+func render() {
+	img = image.NewRGBA(image.Rect(0, 0, conf.Width, conf.Height))
+	drawBuffer := make(chan pix, (conf.Width/steps["x"])*(conf.Height/steps["y"]))
+	go drawThread(drawBuffer)
+	go workersInit(drawBuffer)
 }
