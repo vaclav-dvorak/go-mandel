@@ -1,0 +1,11 @@
+palette: SummerBeach
+width: 1024
+height: 768
+iteration: 800
+workers: 8
+real:
+  from: -2.05
+  to: 1
+imag:
+  from: -1.1
+  to: 1.1

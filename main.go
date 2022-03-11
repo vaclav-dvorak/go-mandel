@@ -12,7 +12,7 @@ import (
 	"github.com/faiface/pixel"
 	"github.com/faiface/pixel/pixelgl"
 	"github.com/knadh/koanf"
-	"github.com/knadh/koanf/parsers/toml"
+	"github.com/knadh/koanf/parsers/yaml"
 	"github.com/knadh/koanf/providers/file"
 
 	"github.com/vaclav-dvorak/go-mandelbrot/palette"
@@ -71,10 +71,10 @@ func run() {
 }
 
 func main() {
-	if err := k.Load(file.Provider("config.toml"), toml.Parser()); err != nil {
+	if err := k.Load(file.Provider("config.yaml"), yaml.Parser()); err != nil {
 		log.Fatalf("error loading config: %v", err)
 	}
-	if err := k.Unmarshal("mandel", &conf); err != nil {
+	if err := k.Unmarshal("", &conf); err != nil {
 		log.Fatalf("error parsing config: %v", err)
 	}
 
