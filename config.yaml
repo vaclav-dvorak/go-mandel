@@ -2,7 +2,7 @@ palette: SummerBeach
 width: 1024
 height: 768
 iteration: 800
-workers: 8
+workers: 16
 real:
   from: -2.05
   to: 1

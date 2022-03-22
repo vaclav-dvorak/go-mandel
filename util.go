@@ -4,7 +4,7 @@ import (
 	"image/color"
 	"math"
 
-	"github.com/vaclav-dvorak/go-mandelbrot/palette"
+	"github.com/vaclav-dvorak/go-mandel/palette"
 )
 
 func calcColor(val float64) color.RGBA {

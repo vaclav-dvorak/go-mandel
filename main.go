@@ -15,7 +15,7 @@ import (
 	"github.com/knadh/koanf/parsers/yaml"
 	"github.com/knadh/koanf/providers/file"
 
-	"github.com/vaclav-dvorak/go-mandelbrot/palette"
+	"github.com/vaclav-dvorak/go-mandel/palette"
 )
 
 type config struct {
@@ -92,7 +92,7 @@ func getSteps() map[string]int {
 			dividers = append(dividers, i)
 		}
 	}
-	mid := dividers[len(dividers)/2 : len(dividers)/2+1][0] //? mid is slice of one element. so we pick it up directly with [0]
+	mid := dividers[len(dividers)/2+1 : len(dividers)/2+2][0] //? mid is slice of one element. so we pick it up directly with [0]
 	foundDivider = mid
 	return map[string]int{"x": conf.Width / mid, "y": conf.Height / mid}
 }
